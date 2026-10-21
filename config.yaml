@@ -1,0 +1,67 @@
+seed: 42
+max_output_tokens: 60
+temperature: 0
+reasoning_effort: minimal
+reasoning_reserve: 256
+max_attempts: 5
+retry_initial_seconds: 2
+retry_multiplier: 2
+items_path: data/processed/items.jsonl
+generations_path: outputs/generations.jsonl
+refused_path: outputs/refused.jsonl
+pilot_items_path: data/processed/pilot_items.txt
+pilot_report_path: reports/pilot_gpt.md
+pilot_n: 50
+lmstudio_base_url: http://localhost:1234/v1
+judge_model: gpt-4.1-2025-04-14
+judge_provider: openai
+judge_reasoning: false
+judge_provisional: true
+# GPT replies are coded by Claude. Human replies are coded by both judges.
+# Child-turn checks (notice, visible_trouble) stay on GPT-4.1.
+judges:
+  gpt_replies:
+    provider: anthropic
+    model: claude-sonnet-5-5
+  other_replies:
+    provider: openai
+    model: gpt-4.1-2025-04-14
+codings_path: outputs/codings_cross.jsonl
+coding_report_path: reports/coding_gpt_pilot2.md
+judge_max_attempts: 3
+judge_temperature: 0
+judge_max_tokens: 80
+models:
+  - id: gpt-4.1-2025-04-14
+    provider: openai
+    reasoning: false
+    input_per_million: 2
+    output_per_million: 8
+  - id: claude-sonnet-5-5
+    provider: anthropic
+    reasoning: true
+    input_per_million: 2
+    output_per_million: 10
+  - id: gemini-3.8-flash
+    provider: gemini
+    reasoning: true
+    input_per_million: 0.75
+    output_per_million: 3.75
+  - id: llama-3.2-3b-instruct
+    provider: lmstudio
+    reasoning: false
+    input_per_million: 0
+    output_per_million: 0
+  - id: qwen3-4b-instruct-2507
+    provider: lmstudio
+    reasoning: false
+    disable_thinking: true
+    input_per_million: 0
+    output_per_million: 0
+    report_note: "This LM Studio build cannot parse the Q4_K_M chat template, which uses split()[0] and slice syntax. The template string in the GGUF was replaced with the same im_start format, without those lines. The original template is saved beside the model file as chat_template_original.txt."
+  - id: gemma-3-4b-it
+    provider: lmstudio
+    reasoning: false
+    system_delivery: user_message
+    input_per_million: 0
+    output_per_million: 0
